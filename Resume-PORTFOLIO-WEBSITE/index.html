@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Madhuri's Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      transition: background 0.3s, color 0.3s;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #202124;
+      color: white;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.2rem;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      position: relative;
+      font-weight: bold;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    .nav-links a:hover {
+      color: #00ffd5;
+      transform: scale(1.1);
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -3px;
+      left: 0;
+      background-color: #00ffd5;
+      transition: width 0.3s;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .section {
+      padding: 3rem 2rem;
+      animation: fadeIn 0.6s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hidden {
+      display: none;
+    }
+    .light-theme {
+      background: #f9f9f9;
+      color: #222;
+    }
+    .dark-theme {
+      background: #121212;
+      color: #eee;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+      background: #ffffff11;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00000022;
+    }
+    input, textarea, button {
+      display: block;
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    input:focus, textarea:focus {
+      border-color: #00ffd5;
+      outline: none;
+      box-shadow: 0 0 8px #00ffd5aa;
+    }
+    button:hover {
+      background-color: #00ffd5;
+      color: #000;
+      cursor: pointer;
+      transform: scale(1.03);
+    }
+    #themeToggle {
+      padding: 0.4rem 1rem;
+      background: transparent;
+      border: 1px solid #00ffd5;
+      color: #00ffd5;
+      border-radius: 20px;
+    }
+    .response-item {
+      background: #fff2;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      transition: transform 0.2s ease;
+    }
+    .response-item:hover {
+      transform: scale(1.02);
+      background: #e0f7fa33;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #00ffd5;
+    }
+  </style>
+</head>
+<body class="light-theme">
+  <header>
+    <nav class="navbar slide-in">
+      <h1 class="logo">Madhuri.dev</h1>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><button id="themeToggle">Toggle Theme</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="home" class="section slide-in">
+    <h2>Welcome to My Portfolio</h2>
+    <p>Frontend Developer | React | Firebase | UI/UX Enthusiast</p>
+  </section>
+
+  <section id="about" class="section slide-in">
+    <h2>About Me</h2>
+    <p>I'm a BCA student passionate about creating modern web apps with elegant UI. I specialize in React.js and Firebase integrations.</p>
+  </section>
+
+  <section id="projects" class="section slide-in">
+    <h2>Projects</h2>
+    <ul>
+      <li>Student-Teacher Booking System</li>
+      <li>Sports Buddy</li>
+      <li>Investor-Business Connect App</li>
+    </ul>
+  </section>
+
+  <section id="contact" class="section slide-in">
+    <h2 style="text-align:center">Contact Me</h2>
+    <form id="contactForm">
+      <input type="text" name="name" placeholder="Your Name" required />
+      <input type="email" name="email" placeholder="Your Email" required />
+      <textarea name="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+  <section id="adminLogin" class="section slide-in">
+    <h2 style="text-align:center">Admin Login</h2>
+    <form id="adminForm">
+      <input type="password" id="adminPassword" placeholder="Enter Admin Password" />
+      <button type="submit">Login</button>
+    </form>
+  </section>
+
+  <section id="responses" class="section hidden slide-in">
+    <h2>User Responses</h2>
+    <div id="responseList"></div>
+  </section>
+
+  <script>
+    const contactForm = document.getElementById('contactForm');
+    const adminForm = document.getElementById('adminForm');
+    const adminLoginSection = document.getElementById('adminLogin');
+    const responsesSection = document.getElementById('responses');
+    const responseList = document.getElementById('responseList');
+    const themeToggle = document.getElementById('themeToggle');
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = contactForm.name.value;
+      const email = contactForm.email.value;
+      const message = contactForm.message.value;
+      const time = new Date().toLocaleString();
+
+      const newResponse = { name, email, message, time };
+      let responses = JSON.parse(localStorage.getItem('responses') || '[]');
+      responses.push(newResponse);
+      localStorage.setItem('responses', JSON.stringify(responses));
+      contactForm.reset();
+      alert('Message sent successfully!');
+    });
+
+    adminForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const password = document.getElementById('adminPassword').value;
+      if (password === 'admin123') {
+        alert('Login successful!');
+        adminLoginSection.classList.add('hidden');
+        responsesSection.classList.remove('hidden');
+        showResponses();
+      } else {
+        alert('Incorrect password!');
+      }
+    });
+
+    function showResponses() {
+      const responses = JSON.parse(localStorage.getItem('responses') || '[]');
+      responseList.innerHTML = '';
+      responses.forEach(res => {
+        const div = document.createElement('div');
+        div.className = 'response-item';
+        div.innerHTML = `<strong>${res.name}</strong> <em>(${res.email})</em><br>${res.message}<br><small>${res.time}</small><hr/>`;
+        responseList.appendChild(div);
+      });
+    }
+
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      document.body.classList.toggle('light-theme');
+    });
+  </script>
+</body>
+</html>
